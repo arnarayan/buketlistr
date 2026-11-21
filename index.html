@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PriceTag">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>PriceTag</title>
+</head>
+<body>
+<header><h1>PriceTag</h1><div id="sub">Community price tracker</div></header>
+
+<main>
+  <section id="view-feed" class="view active">
+    <div class="filters">
+      <input id="q" type="search" placeholder="Search items or stores">
+      <select id="f-cat"><option value="">All</option><option>Grocery</option><option>Gas</option></select>
+      <label class="chk"><input type="checkbox" id="f-active" checked> Active only</label>
+    </div>
+    <div id="feed"></div>
+  </section>
+
+  <section id="view-compare" class="view">
+    <p class="hint">Same item (matched by tag/barcode) across stores, cheapest first. Prices are compared per unit.</p>
+    <div id="compare"></div>
+  </section>
+
+  <section id="view-add" class="view">
+    <form id="form">
+      <div class="photo">
+        <img id="preview" alt="" hidden>
+        <label class="btn">📷 Photo of price tag
+          <input type="file" id="photo" accept="image/*" capture="environment" hidden>
+        </label>
+      </div>
+
+      <div class="row">
+        <button type="button" class="btn" id="scan">▦ Scan tag / barcode</button>
+      </div>
+      <div id="reader" hidden></div>
+      <div id="tagline" class="tagline" hidden></div>
+
+      <label>Type
+        <select id="cat" required><option>Grocery</option><option>Gas</option></select>
+      </label>
+      <label>Item <input id="name" required placeholder="e.g. Whole milk 1 gal / Regular 87"></label>
+      <label>Tag / barcode <input id="tag" placeholder="auto-filled by scan" inputmode="numeric"></label>
+      <div class="row">
+        <label>Price ($) <input id="price" type="number" step="0.001" min="0" required inputmode="decimal"></label>
+        <label>Per
+          <select id="unit"><option>each</option><option>lb</option><option>oz</option><option>kg</option><option>gal</option><option>L</option><option>dozen</option></select>
+        </label>
+      </div>
+      <label>Store / seller <input id="store" required placeholder="e.g. Costco, Shell"></label>
+      <label>Location
+        <div class="row">
+          <input id="place" placeholder="Address or neighborhood">
+          <button type="button" class="btn small" id="gps">📍 Use GPS</button>
+        </div>
+      </label>
+      <div class="row">
+        <label>Deal starts <input id="starts" type="date"></label>
+        <label>Deal ends <input id="ends" type="date"></label>
+      </div>
+      <label>Notes <input id="notes" placeholder="member price, limit 2, etc."></label>
+      <button class="btn primary" type="submit">Save price</button>
+    </form>
+  </section>
+
+  <section id="view-about" class="view">
+    <h2>Standard seller tag</h2>
+    <p>For prices to be comparable across competing stores, sellers print the same tag format on every item. PriceTag reads two kinds of tags:</p>
+    <ul>
+      <li><b>Standard PriceTag QR</b> — text in the form<br><code>PT1|SKU-or-GTIN|Item name|price|unit|YYYY-MM-DD end|Store</code><br>Fields after the SKU are optional. This is what a participating seller prints.</li>
+      <li><b>Any UPC/EAN barcode</b> — works today without seller cooperation. The barcode is the comparison key.</li>
+    </ul>
+    <h2>Your data</h2>
+    <p id="count"></p>
+    <div class="row">
+      <button class="btn" id="export">Export JSON</button>
+      <button class="btn danger" id="wipe">Delete all</button>
+    </div>
+    <p class="hint">Data is stored on this phone only. Sharing between users needs a backend (next step).</p>
+  </section>
+</main>
+
+<nav>
+  <button data-v="feed" class="on">Feed</button>
+  <button data-v="compare">Compare</button>
+  <button data-v="add">＋ Add</button>
+  <button data-v="about">Tags</button>
+</nav>
+
+<script src="vendor/html5-qrcode.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
